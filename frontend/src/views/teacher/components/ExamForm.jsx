@@ -1,17 +1,27 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
+import { Box, Typography, Button, TextField } from '@mui/material';
 
 const CreateExam = ({ formik, title, subtitle, subtext }) => {
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = formik;
+
+  const validateLiveDate = () => {
+    const now = new Date();
+    if (new Date(values.liveDate) < now) {
+      return 'Live date cannot be in the past';
+    }
+    return null;
+  };
+
+  const handleExamSubmit = (e) => {
+    e.preventDefault();
+    const liveDateError = validateLiveDate();
+    if (liveDateError) {
+      // Optionally set an error state or show a toast notification
+      alert(liveDateError);
+      return;
+    }
+    handleSubmit();
+  };
 
   return (
     <>
@@ -23,7 +33,7 @@ const CreateExam = ({ formik, title, subtitle, subtext }) => {
 
       {subtext}
 
-      <Box component="form">
+      <Box component="form" onSubmit={handleExamSubmit}>
         <TextField
           id="examName"
           name="examName"
@@ -32,8 +42,8 @@ const CreateExam = ({ formik, title, subtitle, subtext }) => {
           value={values.examName}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.examName && errors.examName ? true : false}
-          helperText={touched.examName && errors.examName ? errors.examName : null}
+          error={touched.examName && Boolean(errors.examName)}
+          helperText={touched.examName && errors.examName}
           fullWidth
           required
           margin="normal"
@@ -48,10 +58,8 @@ const CreateExam = ({ formik, title, subtitle, subtext }) => {
           value={values.totalQuestions}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.totalQuestions && errors.totalQuestions ? true : false}
-          helperText={
-            touched.totalQuestions && errors.totalQuestions ? errors.totalQuestions : null
-          }
+          error={touched.totalQuestions && Boolean(errors.totalQuestions)}
+          helperText={touched.totalQuestions && errors.totalQuestions}
           fullWidth
           required
           margin="normal"
@@ -66,27 +74,12 @@ const CreateExam = ({ formik, title, subtitle, subtext }) => {
           value={values.duration}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.duration && errors.duration ? true : false}
-          helperText={touched.duration && errors.duration ? errors.duration : null}
+          error={touched.duration && Boolean(errors.duration)}
+          helperText={touched.duration && errors.duration}
           fullWidth
           required
           margin="normal"
         />
-
-        {/* <TextField
-          id="liveLink"
-          name="liveLink"
-          label="Live Link"
-          variant="outlined"
-          value={values.liveLink}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={touched.liveLink && errors.liveLink ? true : false}
-          helperText={touched.liveLink && errors.liveLink ? errors.liveLink : null}
-          fullWidth
-          required
-          margin="normal"
-        /> */}
 
         <TextField
           id="liveDate"
@@ -97,8 +90,8 @@ const CreateExam = ({ formik, title, subtitle, subtext }) => {
           value={values.liveDate}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.liveDate && errors.liveDate ? true : false}
-          helperText={touched.liveDate && errors.liveDate ? errors.liveDate : null}
+          error={touched.liveDate && Boolean(errors.liveDate)}
+          helperText={touched.liveDate && (errors.liveDate || validateLiveDate())}
           fullWidth
           required
           margin="normal"
@@ -116,8 +109,8 @@ const CreateExam = ({ formik, title, subtitle, subtext }) => {
           value={values.deadDate}
           onChange={handleChange}
           onBlur={handleBlur}
-          error={touched.deadDate && errors.deadDate ? true : false}
-          helperText={touched.deadDate && errors.deadDate ? errors.deadDate : null}
+          error={touched.deadDate && Boolean(errors.deadDate)}
+          helperText={touched.deadDate && errors.deadDate}
           fullWidth
           required
           margin="normal"
@@ -126,7 +119,13 @@ const CreateExam = ({ formik, title, subtitle, subtext }) => {
           }}
         />
 
-        <Button color="primary" variant="contained" size="large" fullWidth onClick={handleSubmit}>
+        <Button
+          color="primary"
+          variant="contained"
+          size="large"
+          fullWidth
+          onClick={handleExamSubmit}
+        >
           Create Exam
         </Button>
       </Box>

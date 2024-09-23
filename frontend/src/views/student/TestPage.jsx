@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const TestPage = () => {
-  const { examId, testId } = useParams();
+  const { examId } = useParams();
   const navigate = useNavigate();
 
   const [selectedExam, setSelectedExam] = useState([]);
@@ -28,55 +28,83 @@ const TestPage = () => {
     noFaceCount: 0,
     multipleFaceCount: 0,
     cellPhoneCount: 0,
-    ProhibitedObjectCount: 0,
-    examId: examId,
-    username: '',
-    email: '',
+    prohibitedObjectCount: 0,
+    examId: examId || '',
+    username: userInfo?.name || 'Unknown',
+    email: userInfo?.email || 'No Email',
+    copyPasting: false,  // Initialize as false
+    tabsShifting: false,  // Initialize as false
   });
 
-  // Set selected exam and duration when data is available
   useEffect(() => {
     if (userExamdata) {
       const exam = userExamdata.filter((exam) => exam.examId === examId);
       setSelectedExam(exam);
-      if (exam.length > 0) {
-        setExamDurationInSeconds(exam[0].duration * 60);
+
+      if (exam.length > 0 && exam[0]?.duration) {
+        setExamDurationInSeconds((exam[0].duration || 0) * 60);
       }
     }
   }, [userExamdata, examId]);
 
-  // Set questions when data is available
   useEffect(() => {
     if (data) {
-      setQuestions(data);
+      setQuestions(data || []); // Ensure questions is always an array
     }
   }, [data]);
+
+  // Monitor copy-pasting
+  useEffect(() => {
+    const handleCopyPaste = () => {
+      setCheatingLog((prevLog) => ({
+        ...prevLog,
+        copyPasting: true,
+      }));
+    };
+
+    document.addEventListener('copy', handleCopyPaste);
+    
+    return () => {
+      document.removeEventListener('copy', handleCopyPaste);
+    };
+  }, []);
+
+  // Monitor tab shifting
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        setCheatingLog((prevLog) => ({
+          ...prevLog,
+          tabsShifting: true,
+        }));
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   const handleTestSubmission = async () => {
     try {
       setCheatingLog((prevLog) => ({
         ...prevLog,
-        username: userInfo.name,
-        email: userInfo.email,
+        username: userInfo?.name || 'Unknown',
+        email: userInfo?.email || 'No Email',
       }));
 
-      // Save cheating log
-      await saveCheatingLog(cheatingLog);
       await saveCheatingLogMutation(cheatingLog).unwrap();
-
       toast.success('User Logs Saved!!');
       navigate(`/Success`);
     } catch (error) {
-      console.error('cheatlog: ', error);
+      console.error('Error saving cheating log: ', error);
     }
   };
 
   const saveUserTestScore = () => {
-    setScore(score + 1);
-  };
-
-  const saveCheatingLog = async (cheatingLog) => {
-    console.log(cheatingLog);
+    setScore((prevScore) => prevScore + 1);
   };
 
   return (
@@ -123,7 +151,7 @@ const TestPage = () => {
                     }}
                   >
                     <NumberOfQuestions
-                      questionLength={questions.length}
+                      questionLength={questions?.length || 0}
                       submitTest={handleTestSubmission}
                       examDurationInSeconds={examDurationInSeconds}
                     />

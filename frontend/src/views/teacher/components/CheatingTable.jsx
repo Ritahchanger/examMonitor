@@ -79,6 +79,8 @@ export default function CheatingTable() {
               <TableCell>Multiple Face Count</TableCell>
               <TableCell>Cell Phone Count</TableCell>
               <TableCell>Prohibited Object Count</TableCell>
+              <TableCell>Tabs Shifting</TableCell>
+              <TableCell>copy Pasting</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -91,6 +93,8 @@ export default function CheatingTable() {
                 <TableCell>{log.multipleFaceCount}</TableCell>
                 <TableCell>{log.cellPhoneCount}</TableCell>
                 <TableCell>{log.prohibitedObjectCount}</TableCell>
+                <TableCell>{`${log.tabsShifting ? true : false}`}</TableCell>
+                <TableCell>{`${log.copyPasting ? true : false}`}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -36,8 +36,6 @@ const TeacherRoute = Loadable(lazy(() => import('src/views/authentication/Teache
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
-    // Every router we create will now go in here as
-    // they going to be child of our main App component
     <>
       {/* // Private Routes */}
       <Route path="" element={<PrivateRoute />}>

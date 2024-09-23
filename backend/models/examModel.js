@@ -23,11 +23,11 @@ const examSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
-    // Define examId field with UUID generation
+
     examId: {
       type: String,
-      default: uuidv4, // Generate a new UUID for each document
-      unique: true, // Ensure uniqueness of UUIDs
+      default: uuidv4,
+      unique: true,
     },
   },
   {

@@ -13,6 +13,8 @@ const saveCheatingLog = asyncHandler(async (req, res) => {
     examId,
     username,
     email,
+    copyPasting,
+    tabsShifting,
   } = req.body;
 
   const cheatingLog = new CheatingLog({
@@ -21,6 +23,8 @@ const saveCheatingLog = asyncHandler(async (req, res) => {
     cellPhoneCount,
     prohibitedObjectCount,
     examId,
+    copyPasting,
+    tabsShifting,
     username,
     email,
   });

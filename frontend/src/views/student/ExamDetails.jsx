@@ -111,6 +111,7 @@ const DescriptionAndInstructions = () => {
                   <Typography variant="body1">
                     <strong>Do Not switch tabs </strong> while taking the test.
                     <strong> Switching Tabs will Block / End the test automatically.</strong>
+                    <strong>Kindly do not do copy paste. Any copy pasting will be regarded to as exam irregularity and the exam will automatically submit itself </strong>
                   </Typography>
                 </ListItemText>
               </li>

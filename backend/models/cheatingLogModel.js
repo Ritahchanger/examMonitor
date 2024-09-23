@@ -10,6 +10,18 @@ const cheatingLogSchema = new mongoose.Schema(
     examId: { type: String, required: true },
     email: { type: String, required: true },
     username: { type: String, required: true },
+
+    copyPasting: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+
+    tabsShifting: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
   },
   {
     timestamps: true,
